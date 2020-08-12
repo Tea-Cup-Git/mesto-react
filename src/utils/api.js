@@ -14,6 +14,10 @@ class Api {
     }
   }
 
+  _handleCatch(err) {
+    console.error(`Ошибка: ${err}`);
+  }
+
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
       headers: {
@@ -21,6 +25,7 @@ class Api {
       }
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   addCard({ name, link, alt }) {
@@ -38,6 +43,7 @@ class Api {
       })
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   removeCard(cardID) {
@@ -48,6 +54,7 @@ class Api {
       }
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   getUserInfo() {
@@ -57,6 +64,7 @@ class Api {
       }
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   setUserInfo({ name, about }) {
@@ -73,6 +81,7 @@ class Api {
       })
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   setUserAvatar({ avatar }) {
@@ -89,6 +98,7 @@ class Api {
       })
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   putLike(cardID) {
@@ -100,6 +110,7 @@ class Api {
       }
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 
   removeLike(cardID) {
@@ -111,6 +122,7 @@ class Api {
       }
     })
       .then(this._handleResponse)
+      .catch(this._handleCatch)
   }
 }
 

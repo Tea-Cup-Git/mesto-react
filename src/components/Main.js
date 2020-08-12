@@ -2,31 +2,26 @@ import React from 'react';
 import api from '../utils/api';
 import Card from './Card';
 
-function Main({onCardClick, ...props}) {
+function Main({onCardClick, onEditAvatar, onEditProfile, onAddPlace}) {
   const [userName, setUserName] = React.useState('');
   const [userDescription, setUserDescription] = React.useState('');
   const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api.getUserInfo()
-      .then((dataUser) => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([dataUser, dataCards]) => {
         setUserName(dataUser.name);
         setUserDescription(dataUser.about);
         setUserAvatar(dataUser.avatar);
-      })
-  }, [])
 
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then((dataCards) => {
         setCards(dataCards.map(item => ({
           id: item._id,
           src: item.link,
           title: item.name,
           likes: item.likes
         })));
-      });
+      })
   }, [])
 
   return (
@@ -38,24 +33,24 @@ function Main({onCardClick, ...props}) {
         <button
           className="profile__avatar-button"
           type="button"
-          onClick={props.onEditAvatar}
-        ></button>
+          onClick={onEditAvatar}
+        />
         <div className="profile__info">
           <div className="profile__button-wrapper">
             <h1 className="profile__name">{userName}</h1>
             <button
               className="profile__edit-button"
               type="button"
-              onClick={props.onEditProfile}
-            ></button>
+              onClick={onEditProfile}
+            />
           </div>
           <p className="profile__about">{userDescription}</p>
         </div>
         <button
           className="profile__add-button"
           type="button"
-          onClick={props.onAddPlace}
-        ></button>
+          onClick={onAddPlace}
+        />
       </section>
       <section className="photo-grid">
         {
