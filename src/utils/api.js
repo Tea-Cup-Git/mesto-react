@@ -101,21 +101,9 @@ class Api {
       .catch(this._handleCatch)
   }
 
-  putLike(cardID) {
+  changeLikeCardStatus(cardID, like) {
     return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
-      method: 'PUT',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(this._handleResponse)
-      .catch(this._handleCatch)
-  }
-
-  removeLike(cardID) {
-    return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
-      method: 'DELETE',
+      method: like ? 'PUT' : 'DELETE',
       headers: {
         authorization: this._token,
         'Content-Type': 'application/json'

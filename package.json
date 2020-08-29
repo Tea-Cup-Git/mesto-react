@@ -1,6 +1,8 @@
 {
   "homepage": "http://tea-cup-git.github.io/mesto-react",
   "name": "mesto-react",
+  "description": "Сервис Mesto - интерактивная страница, куда можно добавлять фотографии, удалять их и ставить лайки.",
+  "author": "Татьяна Лебедева",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
