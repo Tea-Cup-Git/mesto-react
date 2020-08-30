@@ -34,9 +34,9 @@ function Main({ cards, onCardClick, onCardLike, onCardDelete, onEditAvatar, onEd
         />
       </section>
       <section className="photo-grid">
-        {cards.map(({_id, ...props}) => 
+        {cards.map(({_id, link, name, owner, likes}) => 
             <Card 
-              key={_id} _id={_id} {...props} 
+              key={_id} _id={_id} link={link} name={name} owner={owner} likes={likes}
               onCardClick={onCardClick} 
               onCardLike={onCardLike} 
               onCardDelete={onCardDelete} 

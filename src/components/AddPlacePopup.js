@@ -5,15 +5,22 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const [title, setTitle] = React.useState('');
   const [src, setSrc] = React.useState('');
 
+  React.useEffect(() => {
+    setTitle('');
+    setSrc('');
+  }, [isOpen])
+
   function handleSubmit(e) {
     e.preventDefault();
     onAddPlace(title, src);
-    setTitle('');
-    setSrc('');
   }
 
-  function handleChange(e) {
-    e.target.name === 'cardName' ? setTitle(e.target.value) : setSrc(e.target.value);
+  function handleTitleChange(e) {
+    setTitle(e.target.value);
+  }
+
+  function handleSrcChange(e) {
+    setSrc(e.target.value);
   }
 
   return (
@@ -27,11 +34,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     >
       <input id="name-input" className="popup__input popup__input_type_place-name"
             name="cardName" type="text" minLength="1" maxLength="30"placeholder="Название" 
-            value={title} onChange={handleChange} required />
+            value={title} onChange={handleTitleChange} required />
       <span id="name-input-error" className="popup__input-error"></span>
       <input id="link-input" className="popup__input popup__input_type_image-link"
             name="cardLink" type="url" placeholder="Ссылка на изображение" 
-            value={src} onChange={handleChange} required />
+            value={src} onChange={handleSrcChange} required />
       <span id="link-input-error" className="popup__input-error"></span>
     </PopupWithForm>
   )

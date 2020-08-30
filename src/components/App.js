@@ -9,28 +9,24 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 // import DeletePopup from './DeletePopup'; (В разработке)
+import { renderLoading } from "../utils/utils";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  const [isDeletePopupOpen, setDeletePopupOpen] = React.useState(false);
+  // const [isDeletePopupOpen, setDeletePopupOpen] = React.useState(false); (В разработке)
   const [selectedCard, setSelectedCard] = React.useState({isOpen: false});
   const [currentUser, setCurrentUser] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api.getUserInfo()
-      .then((dataUser) => {
+    Promise.all([ api.getUserInfo(), api.getInitialCards() ])
+      .then(([dataUser, dataCards]) => {
         setCurrentUser(dataUser);
+        setCards(dataCards);
       })
-  }, [])
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then(dataCards => {
-        setCards(dataCards)
-      })
+      .catch((err) => console.error(`Ошибка при загрузке данных: ${err}`));
   }, [])
 
   function handleEditProfileClick() {
@@ -62,7 +58,8 @@ function App() {
       .then(newCard => {
         const newCards = cards.map(c => c._id === card._id ? newCard : c);
         setCards(newCards);
-      });
+      })
+      .catch((err) => console.error(`Ошибка при обновлении лайка: ${err}`));
   }
 
   // Удалить карточку
@@ -71,13 +68,18 @@ function App() {
       .then(() => {
         setCards(cards.filter(c => c._id !== card._id));
       })
+      .catch((err) => console.error(`Ошибка при удалении карточки: ${err}`))
   }
 
   // Добавить карточку
   function handleAddPlaceSubmit(title, src) {
     api.addCard({ name: title, link: src, alt: title })
-      .then(newCard => {
-        setCards([...cards, newCard]);
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+      })
+      .catch((err) => console.error(`Ошибка при добавлении карточки: ${err}`))
+      .finally(() => {
+        renderLoading();
         closeAllPopups();
       })
   }
@@ -87,6 +89,10 @@ function App() {
     api.setUserInfo({name: name, about: description})
       .then(dataUser => {
         setCurrentUser(dataUser);
+      })
+      .catch((err) => console.error(`Ошибка при обновлении данных: ${err}`))
+      .finally(() => {
+        renderLoading();
         closeAllPopups();
       })
   }
@@ -96,6 +102,10 @@ function App() {
     api.setUserAvatar({ avatar: avatar })
     .then(dataAvatar => {
       setCurrentUser(dataAvatar);
+    })
+    .catch((err) => console.error(`Ошибка при обновлении аватара: ${err}`))
+    .finally(() => {
+      renderLoading();
       closeAllPopups();
     })
   }
@@ -105,7 +115,6 @@ function App() {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
-    setDeletePopupOpen(false);
     setSelectedCard({isOpen: false});
   }
 
