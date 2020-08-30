@@ -1,5 +1,3 @@
-import { renderLoading } from "./utils.js";
-
 class Api {
   constructor({ baseUrl, token}) {
     this._baseUrl = baseUrl;
@@ -24,7 +22,6 @@ class Api {
   }
 
   addCard({ name, link, alt }) {
-    renderLoading(true);
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: {
@@ -60,7 +57,6 @@ class Api {
   }
 
   setUserInfo({ name, about }) {
-    renderLoading(true);
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -76,8 +72,6 @@ class Api {
   }
 
   setUserAvatar({ avatar }) {
-    renderLoading(true);
-
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: {

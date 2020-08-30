@@ -19,6 +19,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({isOpen: false});
   const [currentUser, setCurrentUser] = React.useState('');
   const [cards, setCards] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     Promise.all([ api.getUserInfo(), api.getInitialCards() ])
@@ -73,41 +74,35 @@ function App() {
 
   // Добавить карточку
   function handleAddPlaceSubmit(title, src) {
+    setIsLoading(true);
     api.addCard({ name: title, link: src, alt: title })
       .then((newCard) => {
         setCards([newCard, ...cards]);
-      })
-      .catch((err) => console.error(`Ошибка при добавлении карточки: ${err}`))
-      .finally(() => {
-        renderLoading();
         closeAllPopups();
       })
+      .catch((err) => console.error(`Ошибка при добавлении карточки: ${err}`))
   }
 
   // Обновить данные пользователя
   function handleUpdateUser(name, description) {
+    setIsLoading(true);
     api.setUserInfo({name: name, about: description})
       .then(dataUser => {
         setCurrentUser(dataUser);
-      })
-      .catch((err) => console.error(`Ошибка при обновлении данных: ${err}`))
-      .finally(() => {
-        renderLoading();
         closeAllPopups();
       })
+      .catch((err) => console.error(`Ошибка при обновлении данных: ${err}`))
   }
   
   // Обновить аватар пользователя
   function handleUpdateAvatar(avatar) {
+    setIsLoading(true);
     api.setUserAvatar({ avatar: avatar })
     .then(dataAvatar => {
       setCurrentUser(dataAvatar);
-    })
-    .catch((err) => console.error(`Ошибка при обновлении аватара: ${err}`))
-    .finally(() => {
-      renderLoading();
       closeAllPopups();
     })
+    .catch((err) => console.error(`Ошибка при обновлении аватара: ${err}`))
   }
 
   // Закрыть модальное окно
@@ -116,6 +111,7 @@ function App() {
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setSelectedCard({isOpen: false});
+    setIsLoading(false);
   }
 
   return (
@@ -136,16 +132,19 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
+            isLoading={isLoading}
           />
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
+            isLoading={isLoading}
           />
           <EditAvatarPopup 
             isOpen={isEditAvatarPopupOpen} 
             onClose={closeAllPopups} 
             onUpdateAvatar={handleUpdateAvatar}
+            isLoading={isLoading}
           />
           <ImagePopup
             cardSrc={selectedCard.src}
